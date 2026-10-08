@@ -59,12 +59,9 @@ function Shell() {
   return (
     <div style={{ fontFamily: "'Inter', sans-serif", background: "#FAF7F2", minHeight: "100vh", color: "#2B2320", display: "flex" }}>
       <aside className="no-print w-16 md:w-60 shrink-0" style={{ borderRight: "1px solid #DDD3C4", background: "#FFFDF9", minHeight: "100vh", display: "flex", flexDirection: "column" }}>
-        <div className="flex items-center justify-center md:justify-start gap-3 px-2 md:px-5 py-5" style={{ borderBottom: "1px solid #DDD3C4" }}>
-          <img src={logo} alt="La Maison du Cuir by Anaïs" style={{ height: "40px", width: "auto" }} />
-          <div className="hidden md:block">
-            <p className="text-[10px] tracking-[0.15em] uppercase font-mono leading-tight" style={{ color: "#8C3B2E" }}>Gestion Commerciale</p>
-            <p className="text-[10px] italic mt-0.5" style={{ color: "#B8A88F", fontFamily: "'Georgia', serif" }}>by Phil</p>
-          </div>
+        <div className="flex flex-col items-center md:items-start px-2 md:px-5 py-4 gap-1" style={{ borderBottom: "1px solid #DDD3C4" }}>
+          <img src={logo} alt="La Maison du Cuir by Anaïs" className="h-8 md:h-16 w-auto" />
+          <p className="hidden md:block text-[9px] tracking-[0.15em] uppercase font-mono" style={{ color: "#B8A88F" }}>Gestion Commerciale · by Phil</p>
         </div>
         <nav className="flex-1 overflow-y-auto px-2 md:px-3 py-4 flex flex-col gap-1">
           {NAV.map(({ id, label, icon: Icon }) => (

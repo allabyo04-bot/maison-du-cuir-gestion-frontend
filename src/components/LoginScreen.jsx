@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { KeyRound, UserCircle2, ShieldCheck, HelpCircle, ArrowLeft } from "lucide-react";
+import { KeyRound, UserCircle2, HelpCircle, ArrowLeft } from "lucide-react";
 import { useAuth } from "../context/AuthContext.jsx";
 import { api } from "../api.js";
+import logo from "../assets/logo.png";
 
 export default function LoginScreen() {
   const { login } = useAuth();
@@ -73,10 +74,8 @@ export default function LoginScreen() {
     <div style={{ minHeight: "100vh", background: "#FAF7F2" }} className="flex items-center justify-center px-4">
       <div className="w-full max-w-sm rounded-xl p-8" style={{ background: "#FFFDF9", border: "1px solid #EAE1D2" }}>
         <div className="flex flex-col items-center mb-6">
-          <div className="w-12 h-12 rounded-full flex items-center justify-center mb-3" style={{ background: "#F1E9DC" }}>
-            <ShieldCheck size={22} color="#8C3B2E" />
-          </div>
-          <p className="text-xs tracking-[0.2em] uppercase font-mono" style={{ color: "#8C3B2E" }}>Gestion Commerciale & CRM</p>
+          <img src={logo} alt="La Maison du Cuir by Anaïs" className="h-24 w-auto mb-3" />
+          <p className="text-xs tracking-[0.2em] uppercase font-mono" style={{ color: "#8C3B2E" }}>Gestion Commerciale</p>
           <h1 className="font-display text-2xl font-semibold mt-1">
             {mode === "login" ? "Connexion" : "PIN oublié"}
           </h1>
@@ -90,7 +89,7 @@ export default function LoginScreen() {
               <input
                 value={loginId}
                 onChange={(e) => setLoginId(e.target.value)}
-                placeholder="ex: djenie"
+                placeholder="ex: anais"
                 className="flex-1 outline-none bg-transparent text-sm"
                 autoFocus
               />
