@@ -1,0 +1,44 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  margin: 0;
+  font-family: "Inter", sans-serif;
+  background: #FAF7F2;
+}
+.font-display { font-family: "Fraunces", serif; }
+.font-mono { font-family: "IBM Plex Mono", monospace; }
+.stitch { position: relative; }
+.stitch::before {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  border: 1.5px dashed rgba(43,35,32,0.16);
+  border-radius: 10px;
+  pointer-events: none;
+}
+.card-hover { transition: transform 0.15s ease, box-shadow 0.15s ease; }
+.card-hover:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(43,35,32,0.10); }
+.qty-input { width: 48px; text-align: center; padding: 5px 2px; border-radius: 6px; border: 1px solid #DDD3C4; font-family: "IBM Plex Mono", monospace; font-size: 13px; }
+
+@media print {
+  @page { size: 80mm auto; margin: 0; }
+  .no-print { display: none !important; }
+  body * { visibility: hidden; }
+  .print-area, .print-area * { visibility: visible; }
+  .print-area {
+    position: absolute !important;
+    top: 0;
+    left: 0;
+    width: 80mm !important;
+    max-width: 80mm !important;
+    max-height: none !important;
+    box-shadow: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    padding: 4mm !important;
+    font-size: 11px !important;
+  }
+  body { background: #fff !important; }
+}
