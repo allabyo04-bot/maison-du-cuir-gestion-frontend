@@ -268,8 +268,7 @@ export default function EtatsSection() {
           <select value={boutique} onChange={(e) => setBoutique(e.target.value)}
             className="px-3 py-2 rounded-lg text-sm" style={{ border: `1px solid ${COULEUR.bordure}`, background: "#fff" }}>
             <option value="">Toutes les boutiques</option>
-            <option value="Angré">Angré</option>
-            <option value="Koumassi">Koumassi</option>
+            <option value="Boutique Principale">Boutique Principale</option>
           </select>
         </div>
       </div>

@@ -371,7 +371,7 @@ function BudgetPrevisionnel({ onError }) {
           <div className="rounded-2xl p-4 mb-5 flex items-center justify-between" style={{ background: statutGlobal.fond, border: `1px solid ${statutGlobal.couleur}33` }}>
             <div>
               <p className="text-xs font-mono uppercase tracking-wide" style={{ color: statutGlobal.couleur }}>
-                Statut global {boutique ? `— ${boutique}` : "— Consolidé (Angré + Koumassi)"}
+                Statut global {boutique ? `— ${boutique}` : "— Consolidé"}
               </p>
               <p className="font-display text-lg font-semibold" style={{ color: statutGlobal.couleur }}>{statutGlobal.label}</p>
             </div>
