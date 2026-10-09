@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { Calendar, CreditCard, Store, Lock, Award, Download, ChevronDown, Printer, ShieldAlert, Heart, Truck } from "lucide-react";
+import { Calendar, CreditCard, Store, Lock, Award, Download, ChevronDown, Printer, ShieldAlert, Heart, Truck, TrendingUp } from "lucide-react";
 import { api } from "../api.js";
 import { useAuth } from "../context/AuthContext.jsx";
 import { MODES_PAIEMENT, LIVRAISON_ACTIF } from "../constants.js";
@@ -48,6 +48,7 @@ export default function EtatsSection() {
       else if (sousOnglet === "clients") res = await api.etats.parClient(params);
       else if (sousOnglet === "audit") res = await api.etats.auditRemises({ dateDebut, dateFin });
       else if (sousOnglet === "livraisons") res = await api.etats.livraisons(params);
+      else if (sousOnglet === "marge") res = await api.etats.marge({ dateDebut, dateFin });
       else res = await api.etats.recapBoutiques({ dateDebut, dateFin });
       setDonnees(res);
     } catch (e) {
@@ -154,6 +155,13 @@ export default function EtatsSection() {
       });
       lignes.push(["Cumul", donnees.cumul.nombreVentes, donnees.cumul.totalVentes, donnees.cumul.totalRetours, donnees.cumul.totalReglements, donnees.cumul.totalReglementsCreancesHistoriques]);
       nomFichier = `etat-recap-boutiques_${dateDebut}_${dateFin}`;
+    } else if (sousOnglet === "marge" && donnees?.parArticle) {
+      lignes.push(["Article", "Marque", "Qté vendue", "Chiffre d'affaires", "Coût", "Marge", "Marge %"]);
+      donnees.parArticle.forEach((a) => {
+        lignes.push([a.designation, a.marque, a.quantite, a.chiffreAffaires, a.cout, a.marge, a.margePourcent]);
+      });
+      lignes.push(["Total", "", "", donnees.chiffreAffaires, donnees.coutTotal, donnees.marge, donnees.margePourcent]);
+      nomFichier = `etat-marge_${dateDebut}_${dateFin}`;
     } else if (sousOnglet === "audit" && donnees?.lignes) {
       lignes.push(["Vente", "Date", "Boutique", "Caissier", "Montant remise", "Demande N°", "Statut demande", "Traité par", "Suspecte"]);
       donnees.lignes.forEach((l) => {
@@ -196,6 +204,7 @@ export default function EtatsSection() {
     { id: "vendeur", label: "Meilleur vendeur", icon: Award },
     { id: "clients", label: "Meilleures clientes", icon: Heart },
     ...(estAdmin ? [{ id: "recap", label: "Récap boutiques", icon: Store }] : []),
+    ...(estAdmin ? [{ id: "marge", label: "Marge", icon: TrendingUp }] : []),
     ...(estAdmin ? [{ id: "audit", label: "Audit remises", icon: ShieldAlert }] : []),
     ...(LIVRAISON_ACTIF ? [{ id: "livraisons", label: "Livraisons", icon: Truck }] : []),
   ];
@@ -803,6 +812,65 @@ export default function EtatsSection() {
                 <p className="font-display text-xl font-semibold">{formatFCFA(donnees.cumul.totalReglementsCreancesHistoriques)}</p>
               </div>
             </div>
+          </div>
+        </div>
+      )}
+
+      {!chargement && donnees && sousOnglet === "marge" && donnees.parArticle && (
+        <div>
+          <div className="grid sm:grid-cols-4 gap-4 mb-5">
+            <div className="rounded-2xl p-4" style={{ background: COULEUR.carte, border: `1px solid ${COULEUR.bordure}` }}>
+              <p className="text-xs mb-1" style={{ color: COULEUR.texteDoux }}>Chiffre d'affaires</p>
+              <p className="font-display text-xl font-semibold">{formatFCFA(donnees.chiffreAffaires)}</p>
+            </div>
+            <div className="rounded-2xl p-4" style={{ background: COULEUR.carte, border: `1px solid ${COULEUR.bordure}` }}>
+              <p className="text-xs mb-1" style={{ color: COULEUR.texteDoux }}>Coût d'achat</p>
+              <p className="font-display text-xl font-semibold">{formatFCFA(donnees.coutTotal)}</p>
+            </div>
+            <div className="rounded-2xl p-4" style={{ background: COULEUR.texte, color: "#FBF3EC" }}>
+              <p className="text-xs opacity-80 mb-1">Marge</p>
+              <p className="font-display text-xl font-semibold">{formatFCFA(donnees.marge)}</p>
+            </div>
+            <div className="rounded-2xl p-4" style={{ background: COULEUR.texte, color: "#FBF3EC" }}>
+              <p className="text-xs opacity-80 mb-1">Marge en %</p>
+              <p className="font-display text-xl font-semibold">{donnees.margePourcent != null ? `${donnees.margePourcent} %` : "—"}</p>
+            </div>
+          </div>
+
+          {donnees.nombreLignesCoutInconnu > 0 && (
+            <p className="text-xs mb-4 px-3 py-2 rounded-lg" style={{ background: "#FBEAE7", color: COULEUR.accent }}>
+              ⚠ {donnees.nombreLignesCoutInconnu} ligne(s) de vente ({donnees.quantiteCoutInconnu} article(s)) exclue(s) de ce calcul : le prix d'achat de l'article n'était pas encore connu au moment de la vente (jamais reçu via une réception avec prix). Le chiffre d'affaires ci-dessus inclut ces ventes, mais pas le coût ni la marge.
+            </p>
+          )}
+
+          <div className="rounded-2xl overflow-hidden" style={{ background: COULEUR.carte, border: `1px solid ${COULEUR.bordure}` }}>
+            <table className="w-full text-sm">
+              <thead>
+                <tr style={{ background: "#F1E9DC" }}>
+                  <th className="text-left px-4 py-2">Article</th>
+                  <th className="text-right px-4 py-2">Qté vendue</th>
+                  <th className="text-right px-4 py-2">Chiffre d'affaires</th>
+                  <th className="text-right px-4 py-2">Coût</th>
+                  <th className="text-right px-4 py-2">Marge</th>
+                  <th className="text-right px-4 py-2">Marge %</th>
+                </tr>
+              </thead>
+              <tbody>
+                {donnees.parArticle.map((a) => (
+                  <tr key={a.articleId} style={{ borderTop: `1px solid ${COULEUR.bordure}` }}>
+                    <td className="px-4 py-2">{a.designation} <span style={{ color: COULEUR.texteDoux }}>({a.marque})</span></td>
+                    <td className="px-4 py-2 text-right">{a.quantite}</td>
+                    <td className="px-4 py-2 text-right">{formatFCFA(a.chiffreAffaires)}</td>
+                    <td className="px-4 py-2 text-right">{formatFCFA(a.cout)}</td>
+                    <td className="px-4 py-2 text-right font-medium">{formatFCFA(a.marge)}</td>
+                    <td className="px-4 py-2 text-right">{a.margePourcent != null ? `${a.margePourcent} %` : "—"}</td>
+                  </tr>
+                ))}
+                {donnees.parArticle.length === 0 && (
+                  <tr><td colSpan={6} className="px-4 py-6 text-center" style={{ color: COULEUR.texteDoux }}>Aucune vente avec un coût connu sur cette période.</td></tr>
+                )}
+              </tbody>
+            </table>
           </div>
         </div>
       )}

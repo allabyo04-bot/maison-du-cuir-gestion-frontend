@@ -187,6 +187,15 @@ ajouterStock: (id, boutique, pointure, quantite) =>
     lister: (boutique) => request(`/api/receptions${boutique ? `?boutique=${encodeURIComponent(boutique)}` : ""}`),
     creer: (data) => request("/api/receptions", { method: "POST", body: data }),
   },
+  fournisseurs: {
+    lister: (actif) => request(`/api/fournisseurs${actif != null ? `?actif=${actif}` : ""}`),
+    get: (id) => request(`/api/fournisseurs/${id}`),
+    creer: (data) => request("/api/fournisseurs", { method: "POST", body: data }),
+    modifier: (id, data) => request(`/api/fournisseurs/${id}`, { method: "PATCH", body: data }),
+    lierArticle: (id, articleId) => request(`/api/fournisseurs/${id}/articles`, { method: "POST", body: { articleId } }),
+    delierArticle: (id, articleId) => request(`/api/fournisseurs/${id}/articles/${articleId}`, { method: "DELETE" }),
+    enregistrerPaiement: (id, data) => request(`/api/fournisseurs/${id}/paiements`, { method: "POST", body: data }),
+  },
   bonsLivraison: {
     lister: ({ statut, boutique, dateDebut, dateFin } = {}) => {
       const qs = new URLSearchParams({ ...(statut ? { statut } : {}), ...(boutique ? { boutique } : {}), ...(dateDebut ? { dateDebut } : {}), ...(dateFin ? { dateFin } : {}) }).toString();
@@ -311,6 +320,10 @@ etats: {
     recapBoutiques: (params = {}) => {
       const qs = new URLSearchParams(params).toString();
       return request(`/api/etats/recap-boutiques${qs ? `?${qs}` : ""}`);
+    },
+    marge: (params = {}) => {
+      const qs = new URLSearchParams(params).toString();
+      return request(`/api/etats/marge${qs ? `?${qs}` : ""}`);
     },
     parVendeur: (params = {}) => {
       const qs = new URLSearchParams(params).toString();

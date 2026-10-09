@@ -1555,9 +1555,13 @@ function SoldesSection({ brands }) {
 // ------------------------------------------------------------
 function ReceptionSection({ articles, onApplique }) {
   const [boutique, setBoutique] = useState("");
-  const [fournisseur, setFournisseur] = useState("");
+  const [fournisseurs, setFournisseurs] = useState([]);
+  const [fournisseurId, setFournisseurId] = useState("");
+  const [fournisseurNomLibre, setFournisseurNomLibre] = useState("");
   const [reference, setReference] = useState("");
   const [notes, setNotes] = useState("");
+
+  useEffect(() => { api.fournisseurs.lister(true).then(setFournisseurs).catch(() => {}); }, []);
 
   const [rechercheArticle, setRechercheArticle] = useState("");
   const [articleChoisi, setArticleChoisi] = useState(null);
@@ -1614,11 +1618,13 @@ function ReceptionSection({ articles, onApplique }) {
     setEnvoiEnCours(true); setErreur(""); setResultat(null);
     try {
       const rec = await api.receptions.creer({
-        fournisseur: fournisseur || undefined, reference: reference || undefined, boutique, notes: notes || undefined,
+        fournisseurId: fournisseurId || undefined,
+        fournisseurNomLibre: fournisseurId ? undefined : (fournisseurNomLibre || undefined),
+        reference: reference || undefined, boutique, notes: notes || undefined,
         lignes: lignes.map(({ articleId, pointure, quantite, prixAchat }) => ({ articleId, pointure, quantite, prixAchat })),
       });
       setResultat(rec);
-      setLignes([]); setFournisseur(""); setReference(""); setNotes("");
+      setLignes([]); setFournisseurId(""); setFournisseurNomLibre(""); setReference(""); setNotes("");
       chargerHistorique();
       onApplique();
     } catch (e) { setErreur(e.message); } finally { setEnvoiEnCours(false); }
@@ -1639,7 +1645,13 @@ function ReceptionSection({ articles, onApplique }) {
           </div>
           <div>
             <label className="block text-xs mb-1" style={{ color: "#6B5D52" }}>Fournisseur (optionnel)</label>
-            <input value={fournisseur} onChange={(e) => setFournisseur(e.target.value)} style={selectStyle} placeholder="Ex : Hispanitas Import" />
+            <select value={fournisseurId} onChange={(e) => setFournisseurId(e.target.value)} style={selectStyle}>
+              <option value="">— Non enregistré / ponctuel —</option>
+              {fournisseurs.map((f) => <option key={f.id} value={f.id}>{f.nom}</option>)}
+            </select>
+            {!fournisseurId && (
+              <input value={fournisseurNomLibre} onChange={(e) => setFournisseurNomLibre(e.target.value)} style={{ ...selectStyle, marginTop: "6px" }} placeholder="Nom libre (ex : Hispanitas Import)" />
+            )}
           </div>
           <div>
             <label className="block text-xs mb-1" style={{ color: "#6B5D52" }}>Référence bon de livraison (optionnel)</label>
@@ -1747,7 +1759,7 @@ function ReceptionSection({ articles, onApplique }) {
               <div key={r.id} className="rounded-xl p-4" style={{ background: "#FAF7F2", border: "1px solid #EFE7D9" }}>
                 <div className="flex items-center justify-between flex-wrap gap-2 mb-2">
                   <p className="text-sm font-medium">
-                    {r.fournisseur || "Fournisseur non précisé"} {r.reference ? `· ${r.reference}` : ""}
+                    {r.fournisseur?.nom || r.fournisseurNomLibre || "Fournisseur non précisé"} {r.reference ? `· ${r.reference}` : ""}
                   </p>
                   <p className="text-xs" style={{ color: "#6B5D52" }}>{new Date(r.dateReception).toLocaleDateString("fr-FR")} · {r.effectuePar?.prenom} {r.effectuePar?.nom}</p>
                 </div>

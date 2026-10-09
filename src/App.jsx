@@ -1,4 +1,4 @@
-import { ShoppingCart, Heart, Users as UsersIcon, Boxes, ShieldCheck, LogOut, BarChart3, LayoutDashboard, Wallet, Truck, ScrollText, Crown } from "lucide-react";
+import { ShoppingCart, Heart, Users as UsersIcon, Boxes, ShieldCheck, LogOut, BarChart3, LayoutDashboard, Wallet, Truck, ScrollText, Crown, Handshake } from "lucide-react";
 import { AuthProvider, useAuth } from "./context/AuthContext.jsx";
 import LoginScreen from "./components/LoginScreen.jsx";
 import UtilisateursSection from "./sections/UtilisateursSection.jsx";
@@ -12,6 +12,7 @@ import DepensesSection from "./sections/DepensesSection.jsx";
 import LivraisonSection from "./sections/LivraisonSection.jsx";
 import JournalAuditSection from "./sections/JournalAuditSection.jsx";
 import FideliteSection from "./sections/FideliteSection.jsx";
+import FournisseursSection from "./sections/FournisseursSection.jsx";
 import { useState, useEffect } from "react";
 import logo from "./assets/logo.png";
 import { api } from "./api.js";
@@ -48,6 +49,7 @@ function Shell() {
     // Chantier en cours, masqué tant que Djenie n'a pas donné le feu vert (voir constants.js).
     ...(estAdmin && FIDELITE_ACTIF ? [{ id: "fidelite", label: "Fidélité", icon: Crown }] : []),
     { id: "stock", label: "Stock", icon: Boxes, perm: "stock" },
+    { id: "fournisseurs", label: "Fournisseurs", icon: Handshake, perm: "stock" },
     // Réservé à l'administrateur (Djenie) — pas une question de permission par rôle, comme côté
     // serveur qui vérifie directement role.systeme plutôt qu'une permission dédiée.
     ...(estAdmin ? [{ id: "journal-audit", label: "Journal d'audit", icon: ScrollText }] : []),
@@ -97,6 +99,7 @@ function Shell() {
           {activeTab === "clients" && <ClientsSection />}
           {activeTab === "utilisateurs" && <UtilisateursSection />}
           {activeTab === "stock" && <StockSection />}
+          {activeTab === "fournisseurs" && <FournisseursSection />}
           {activeTab === "roles" && <RolesSection />}
           {activeTab === "journal-audit" && <JournalAuditSection />}
           {activeTab === "fidelite" && <FideliteSection />}
