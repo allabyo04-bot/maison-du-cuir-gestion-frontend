@@ -138,6 +138,22 @@ ajouterStock: (id, boutique, pointure, quantite) =>
       return data;
     },
     importConfirmer: (data) => request("/api/articles/import/confirmer", { method: "POST", body: data }),
+    uploaderPhoto: async (articleId, fichier) => {
+      const token = localStorage.getItem("gc_token");
+      const formData = new FormData();
+      formData.append("photo", fichier);
+      const res = await fetch(`${API_URL}/api/articles/${articleId}/photo`, {
+        method: "POST",
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+        body: formData,
+      });
+      let data;
+      try { data = await res.json(); } catch { data = null; }
+      if (!res.ok) { const err = new Error(data?.error || `Erreur ${res.status}`); err.status = res.status; throw err; }
+      return data;
+    },
+    supprimerPhoto: (articleId, photoId) => request(`/api/articles/${articleId}/photos/${photoId}`, { method: "DELETE" }),
+    definirPhotoPrincipale: (articleId, photoId) => request(`/api/articles/${articleId}/photos/${photoId}/principale`, { method: "PUT" }),
   },
   inventaire: {
     // Télécharge la feuille de comptage Excel et déclenche le téléchargement dans le navigateur.

@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { Plus, Pencil, Trash2, Package, Tag, ChevronRight, X, Search, PauseCircle } from "lucide-react";
+import { Plus, Pencil, Trash2, Package, Tag, ChevronRight, X, Search, PauseCircle, Star } from "lucide-react";
 import { api } from "../api.js";
 import { FAMILLES, BOUTIQUES, POINTURES, fmt } from "../constants.js";
 import { Field, ConfirmModal, ErrorBanner, inputStyle, selectStyle } from "../components/Shared.jsx";
@@ -182,7 +182,11 @@ const ajouterStock = async (articleId, boutique, pointure, quantite) => {
                 <div key={a.id} className="stitch card-hover rounded-xl p-5" style={{ background: "#FFFFFF", border: "1px solid #EAE1D2", opacity: a.actif === false ? 0.6 : 1 }}>
                   <div className="flex items-start justify-between">
                     <div className="flex items-center gap-3">
-                      <div className="w-11 h-11 rounded-full flex items-center justify-center shrink-0" style={{ background: "#F1E9DC" }}><Package size={18} color="#8C3B2E" /></div>
+                      {a.photoUrl ? (
+                        <img src={a.photoUrl} alt={a.designation} className="w-11 h-11 rounded-full object-cover shrink-0" style={{ border: "1px solid #EAE1D2" }} />
+                      ) : (
+                        <div className="w-11 h-11 rounded-full flex items-center justify-center shrink-0" style={{ background: "#F1E9DC" }}><Package size={18} color="#8C3B2E" /></div>
+                      )}
                       <div>
                         <p className="font-medium leading-tight">{a.designation}</p>
                         <p className="text-xs font-mono mt-0.5" style={{ color: "#6B5D52" }}>{a.reference}</p>
@@ -361,7 +365,7 @@ const ajouterStock = async (articleId, boutique, pointure, quantite) => {
       {tab === "reception" && <ReceptionSection articles={articles} onApplique={load} />}
         </div>
       </div>
-      {modalArticle && <ArticleModal article={modalArticle} brands={brands} onCancel={() => setModalArticle(null)} onSubmit={submitArticle} />}
+      {modalArticle && <ArticleModal article={modalArticle} brands={brands} onCancel={() => setModalArticle(null)} onSubmit={submitArticle} onPhotoChange={load} />}
       {editingArticle && (
         <StockEditorModal
           article={editingArticle}
@@ -386,7 +390,66 @@ const ajouterStock = async (articleId, boutique, pointure, quantite) => {
   );
 }
 
-function ArticleModal({ article, brands, onCancel, onSubmit }) {
+// Galerie de photos d'un article : ajout (plusieurs), définir la principale (vignette dans les
+// listes), suppression. La toute première photo ajoutée devient automatiquement la principale.
+function GaleriePhotos({ article, onArticleMisAJour }) {
+  const [envoiEnCours, setEnvoiEnCours] = useState(false);
+  const [actionEnCours, setActionEnCours] = useState(null); // id de la photo en cours de suppression/promotion
+  const [erreur, setErreur] = useState("");
+  const photos = article.photos || [];
+
+  const ajouterPhoto = async (e) => {
+    const fichier = e.target.files[0];
+    if (!fichier) return;
+    e.target.value = "";
+    setEnvoiEnCours(true); setErreur("");
+    try { onArticleMisAJour(await api.articles.uploaderPhoto(article.id, fichier)); }
+    catch (err) { setErreur(err.message); }
+    finally { setEnvoiEnCours(false); }
+  };
+  const supprimerPhoto = async (photoId) => {
+    setActionEnCours(photoId); setErreur("");
+    try { onArticleMisAJour(await api.articles.supprimerPhoto(article.id, photoId)); }
+    catch (err) { setErreur(err.message); }
+    finally { setActionEnCours(null); }
+  };
+  const definirPrincipale = async (photoId) => {
+    setActionEnCours(photoId); setErreur("");
+    try { onArticleMisAJour(await api.articles.definirPhotoPrincipale(article.id, photoId)); }
+    catch (err) { setErreur(err.message); }
+    finally { setActionEnCours(null); }
+  };
+
+  return (
+    <div className="mt-4 pt-4" style={{ borderTop: "1px solid #EFE7D9" }}>
+      <p className="text-xs font-medium mb-2" style={{ color: "#6B5D52" }}>Photos</p>
+      {erreur && <p className="text-xs mb-2" style={{ color: "#B04A3B" }}>{erreur}</p>}
+      <div className="flex flex-wrap gap-2">
+        {photos.map((photo) => (
+          <div key={photo.id} className="relative" style={{ width: "64px", height: "64px" }}>
+            <img
+              src={photo.url} alt="" onClick={() => !photo.estPrincipale && definirPrincipale(photo.id)}
+              className="w-full h-full object-cover rounded-lg"
+              style={{ outline: photo.estPrincipale ? "2px solid #8C3B2E" : "1px solid #EAE1D2", cursor: photo.estPrincipale ? "default" : "pointer", opacity: actionEnCours === photo.id ? 0.5 : 1 }}
+              title={photo.estPrincipale ? "Photo principale" : "Cliquer pour définir comme principale"}
+            />
+            {photo.estPrincipale && <Star size={14} fill="#8C3B2E" color="#8C3B2E" className="absolute -top-1.5 -left-1.5" />}
+            <button type="button" onClick={() => supprimerPhoto(photo.id)} disabled={actionEnCours === photo.id}
+              className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full flex items-center justify-center text-xs"
+              style={{ background: "#B04A3B", color: "#FFFFFF" }} title="Supprimer cette photo">×</button>
+          </div>
+        ))}
+        <label className="flex items-center justify-center rounded-lg text-xs cursor-pointer" style={{ width: "64px", height: "64px", border: "1px dashed #DDD3C4", color: "#6B5D52" }}>
+          {envoiEnCours ? "…" : "+ Ajouter"}
+          <input type="file" accept="image/*" onChange={ajouterPhoto} style={{ display: "none" }} disabled={envoiEnCours} />
+        </label>
+      </div>
+      {photos.length > 1 && <p className="text-xs mt-2" style={{ color: "#A89A87" }}>Clique sur une photo pour la définir comme principale (vignette dans les listes).</p>}
+    </div>
+  );
+}
+
+function ArticleModal({ article, brands, onCancel, onSubmit, onPhotoChange }) {
   const [form, setForm] = useState(article);
   const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
   return (
@@ -414,6 +477,12 @@ function ArticleModal({ article, brands, onCancel, onSubmit }) {
         {!form.isNew && (
           <p className="text-xs mt-3" style={{ color: "#6B5D52" }}>La famille et la marque ne sont pas modifiables après création (ça changerait la structure du stock déjà en place).</p>
      )}
+        {!form.isNew && (
+          <GaleriePhotos
+            article={form}
+            onArticleMisAJour={(a) => { setForm((f) => ({ ...f, photoUrl: a.photoUrl, photos: a.photos })); onPhotoChange?.(); }}
+          />
+        )}
         <div className="flex justify-end gap-3 mt-6">
           <button onClick={onCancel} className="px-4 py-2 rounded-lg text-sm" style={{ color: "#6B5D52" }}>Annuler</button>
           <button onClick={() => onSubmit(form)} className="px-4 py-2 rounded-lg text-sm font-medium" style={{ background: "#8C3B2E", color: "#FBF3EC" }}>Enregistrer</button>
