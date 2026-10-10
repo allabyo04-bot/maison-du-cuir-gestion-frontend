@@ -111,6 +111,7 @@ export const api = {
     create: (data) => request("/api/articles", { method: "POST", body: data }),
     update: (id, data) => request(`/api/articles/${id}`, { method: "PUT", body: data }),
     remove: (id) => request(`/api/articles/${id}`, { method: "DELETE" }),
+    toggleActif: (id, actif) => request(`/api/articles/${id}/actif`, { method: "PATCH", body: { actif } }),
     desactiverTous: () => request("/api/articles/desactiver-tous", { method: "PUT" }),
 historiqueMouvements: (params = {}) => {
       const qs = new URLSearchParams(params).toString();

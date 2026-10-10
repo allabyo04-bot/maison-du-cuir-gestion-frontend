@@ -105,7 +105,12 @@ useEffect(() => { if (tab === "historique") loadMouvements(articleFiltreId); }, 
   };
 
   const removeArticle = async (a) => {
-    try { await api.articles.remove(a.id); setConfirmDelete(null); load(); } catch (e) { setError(e.message); }
+    try { await api.articles.remove(a.id); setConfirmDelete(null); load(); }
+    catch (e) { setConfirmDelete(null); setError(e.message); }
+  };
+
+  const toggleActif = async (a) => {
+    try { await api.articles.toggleActif(a.id, a.actif === false); load(); } catch (e) { setError(e.message); }
   };
 
   const updateStock = async (articleId, boutique, pointure, quantite) => {
@@ -208,6 +213,7 @@ const ajouterStock = async (articleId, boutique, pointure, quantite) => {
                   <div className="flex items-center justify-between mt-4 pt-4" style={{ borderTop: "1px solid #EFE7D9" }}>
                     <button onClick={() => setStockEditor(a.id)} className="text-xs font-medium flex items-center gap-1" style={{ color: "#8C3B2E" }}>Gérer le stock <ChevronRight size={13} /></button>
                     <div className="flex gap-3">
+                      <button onClick={() => toggleActif(a)} title={a.actif === false ? "Réactiver" : "Désactiver"} style={{ color: "#6B5D52" }}><PauseCircle size={16} /></button>
                       <button onClick={() => openEditArticle(a)} style={{ color: "#8C3B2E" }}><Pencil size={16} /></button>
                       <button onClick={() => setConfirmDelete(a)} style={{ color: "#B04A3B" }}><Trash2 size={16} /></button>
                     </div>
