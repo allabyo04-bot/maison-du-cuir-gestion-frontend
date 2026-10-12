@@ -1,4 +1,4 @@
-import { ShoppingCart, Heart, Users as UsersIcon, Boxes, ShieldCheck, LogOut, BarChart3, LayoutDashboard, Wallet, Truck, ScrollText, Crown, Handshake } from "lucide-react";
+import { ShoppingCart, Heart, Users as UsersIcon, Boxes, ShieldCheck, LogOut, BarChart3, LayoutDashboard, Wallet, Truck, ScrollText, Crown, Handshake, Globe } from "lucide-react";
 import { AuthProvider, useAuth } from "./context/AuthContext.jsx";
 import LoginScreen from "./components/LoginScreen.jsx";
 import UtilisateursSection from "./sections/UtilisateursSection.jsx";
@@ -13,6 +13,7 @@ import LivraisonSection from "./sections/LivraisonSection.jsx";
 import JournalAuditSection from "./sections/JournalAuditSection.jsx";
 import FideliteSection from "./sections/FideliteSection.jsx";
 import FournisseursSection from "./sections/FournisseursSection.jsx";
+import CommandesEnLigneSection from "./sections/CommandesEnLigneSection.jsx";
 import { useState, useEffect } from "react";
 import logo from "./assets/logo.png";
 import { api } from "./api.js";
@@ -40,6 +41,7 @@ function Shell() {
   const NAV = [
     { id: "accueil", label: "Accueil", icon: LayoutDashboard },
     { id: "ventes", label: "Ventes", icon: ShoppingCart, perm: "ventes" },
+    { id: "commandes-en-ligne", label: "Commandes en ligne", icon: Globe, perm: "ventes" },
     // Accessible avec la permission "ventes" (comme avant) OU juste "livraison" (nouveau rôle
     // Livreur, sans accès au reste de Ventes) — voir le filtre plus bas qui gère perm en tableau.
     ...(LIVRAISON_ACTIF ? [{ id: "livraison", label: "Livraison", icon: Truck, perm: ["ventes", "livraison"] }] : []),
@@ -100,6 +102,7 @@ function Shell() {
           {activeTab === "utilisateurs" && <UtilisateursSection />}
           {activeTab === "stock" && <StockSection />}
           {activeTab === "fournisseurs" && <FournisseursSection />}
+          {activeTab === "commandes-en-ligne" && <CommandesEnLigneSection />}
           {activeTab === "roles" && <RolesSection />}
           {activeTab === "journal-audit" && <JournalAuditSection />}
           {activeTab === "fidelite" && <FideliteSection />}

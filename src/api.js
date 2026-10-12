@@ -204,6 +204,10 @@ ajouterStock: (id, boutique, pointure, quantite) =>
     lister: (boutique) => request(`/api/receptions${boutique ? `?boutique=${encodeURIComponent(boutique)}` : ""}`),
     creer: (data) => request("/api/receptions", { method: "POST", body: data }),
   },
+  boutique: {
+    commandesAdmin: (statut) => request(`/api/boutique/admin/commandes${statut ? `?statut=${statut}` : ""}`),
+    modifierStatutCommande: (id, statut) => request(`/api/boutique/admin/commandes/${id}`, { method: "PUT", body: { statut } }),
+  },
   fournisseurs: {
     lister: (actif) => request(`/api/fournisseurs${actif != null ? `?actif=${actif}` : ""}`),
     get: (id) => request(`/api/fournisseurs/${id}`),
