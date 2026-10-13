@@ -71,11 +71,11 @@ export function fmt(n) {
 }
 
 // Interrupteur temporaire : le module Livraison (bons de livraison, sortie provisoire de stock)
-// est construit et prêt, mais caché tant que Djenie n'a pas donné le feu vert (le temps de bien
+// est construit et prêt, mais caché tant que Anaïs n'a pas donné le feu vert (le temps de bien
 // expliquer aux caissières) — repasser à true dès qu'elle donne l'accord. Contrôle à la fois
 // l'onglet dans la navigation (App.jsx) et l'encart correspondant sur le tableau de bord.
 export const LIVRAISON_ACTIF = true;
 // Interrupteur temporaire (voir App.jsx) : le programme de fidélité "Cendrillon" vient du code de
-// La Pointure (seuils en FCFA et nom propres à Djenie) — masqué tant qu'Anaïs n'a pas décidé si
+// La Pointure (seuils en FCFA et nom propres à Anaïs) — masqué tant qu'Anaïs n'a pas décidé si
 // elle veut un programme de fidélité, et avec quels paliers/nom.
 export const FIDELITE_ACTIF = false;

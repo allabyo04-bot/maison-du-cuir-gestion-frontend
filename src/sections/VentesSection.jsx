@@ -7,7 +7,7 @@ import { Field, ErrorBanner, inputStyle } from "../components/Shared.jsx";
 
 function uid() { return `tmp_${Date.now()}_${Math.floor(Math.random() * 10000)}`; }
 
-// Interrupteur temporaire : le bouton "WhatsApp" sur le reçu est désactivé le temps que Djenie
+// Interrupteur temporaire : le bouton "WhatsApp" sur le reçu est désactivé le temps que Anaïs
 // forme les caissières à son utilisation — repasser à true dès qu'elle donne le feu vert.
 const WHATSAPP_RECU_ACTIF = true;
 
@@ -471,13 +471,13 @@ export default function VentesSection({ subTabInitial, onSubTabInitialConsomme }
                     <input type="number" min="0" value={remiseValeur} onChange={(e) => setRemiseValeur(e.target.value)} placeholder={remiseType === "MONTANT" ? "Ex : 5000" : "Ex : 10"} style={{ ...inputStyle, marginTop: 0 }} />
                     <div className="flex gap-2 mt-2">
                       <button onClick={() => { setRemiseFormOuvert(false); setRemiseValeur(""); }} className="flex-1 px-3 py-1.5 rounded-lg text-xs" style={{ color: "#6B5D52" }}>Annuler</button>
-                      <button onClick={demanderRemise} disabled={remiseChargement} className="flex-1 px-3 py-1.5 rounded-lg text-xs font-medium" style={{ background: "#8C3B2E", color: "#FBF3EC" }}>{remiseChargement ? "Envoi..." : "Envoyer a Djenie"}</button>
+                      <button onClick={demanderRemise} disabled={remiseChargement} className="flex-1 px-3 py-1.5 rounded-lg text-xs font-medium" style={{ background: "#8C3B2E", color: "#FBF3EC" }}>{remiseChargement ? "Envoi..." : "Envoyer a Anaïs"}</button>
                     </div>
                   </div>
                 )}
                 {demandeRemise?.statut === "EN_ATTENTE" && (
                   <div className="flex items-center gap-2 text-xs px-3 py-2 rounded-lg" style={{ background: "#F1E9DC", color: "#6B5D52" }}>
-                    <Clock size={13} /> Remise en attente de validation par Djenie ({demandeRemise.numero}) — tu peux deja encaisser au tarif reduit, elle validera apres coup
+                    <Clock size={13} /> Remise en attente de validation par Anaïs ({demandeRemise.numero}) — tu peux deja encaisser au tarif reduit, elle validera apres coup
                   </div>
                 )}
                 {demandeRemise?.statut === "APPROUVEE" && (
@@ -488,7 +488,7 @@ export default function VentesSection({ subTabInitial, onSubTabInitialConsomme }
                 )}
                 {demandeRemise?.statut === "REFUSEE" && (
                   <div className="flex items-center justify-between gap-2 text-xs px-3 py-2 rounded-lg" style={{ background: "#FBEAE7", color: "#8C3B2E" }}>
-                    <span className="flex items-center gap-1.5"><XCircle size={13} /> Remise refusee par Djenie</span>
+                    <span className="flex items-center gap-1.5"><XCircle size={13} /> Remise refusee par Anaïs</span>
                     <button onClick={() => setDemandeRemise(null)} style={{ color: "#8C3B2E" }}><X size={13} /></button>
                   </div>
                 )}
@@ -593,7 +593,7 @@ export default function VentesSection({ subTabInitial, onSubTabInitialConsomme }
         <div>
           {!estAdmin && (
             <p className="text-xs mb-4 px-3 py-2 rounded-lg" style={{ background: "#F1E9DC", color: "#6B5D52" }}>
-              Tu consultes les ventes d'aujourd'hui ({new Date().toLocaleDateString("fr-FR")}). Seule Djenie peut consulter et annuler les jours précédents.
+              Tu consultes les ventes d'aujourd'hui ({new Date().toLocaleDateString("fr-FR")}). Seule Anaïs peut consulter et annuler les jours précédents.
             </p>
           )}
           <div className="relative mb-4 max-w-md">
@@ -1172,13 +1172,13 @@ function RetoursSection({ ventes, articles, boutique, onDone }) {
                           <input type="number" min="0" value={remiseValeur} onChange={(e) => setRemiseValeur(e.target.value)} placeholder={remiseType === "MONTANT" ? "Ex : 5000" : "Ex : 10"} style={{ ...inputStyle, marginTop: 0 }} />
                           <div className="flex gap-2 mt-2">
                             <button onClick={() => { setRemiseFormOuvert(false); setRemiseValeur(""); }} className="flex-1 px-3 py-1.5 rounded-lg text-xs" style={{ color: "#6B5D52" }}>Annuler</button>
-                            <button onClick={demanderRemiseEchange} disabled={remiseChargement} className="flex-1 px-3 py-1.5 rounded-lg text-xs font-medium" style={{ background: "#8C3B2E", color: "#FBF3EC" }}>{remiseChargement ? "Envoi..." : "Envoyer à Djenie"}</button>
+                            <button onClick={demanderRemiseEchange} disabled={remiseChargement} className="flex-1 px-3 py-1.5 rounded-lg text-xs font-medium" style={{ background: "#8C3B2E", color: "#FBF3EC" }}>{remiseChargement ? "Envoi..." : "Envoyer à Anaïs"}</button>
                           </div>
                         </div>
                       )}
                       {demandeRemiseEchange?.statut === "EN_ATTENTE" && (
                         <div className="flex items-center gap-2 text-xs px-3 py-2 rounded-lg mb-3" style={{ background: "#FFFFFF", color: "#6B5D52" }}>
-                          <Clock size={13} /> Remise en attente de validation par Djenie ({demandeRemiseEchange.numero}) — la cliente peut déjà payer le montant réduit
+                          <Clock size={13} /> Remise en attente de validation par Anaïs ({demandeRemiseEchange.numero}) — la cliente peut déjà payer le montant réduit
                         </div>
                       )}
                       {demandeRemiseEchange?.statut === "APPROUVEE" && (
@@ -1189,7 +1189,7 @@ function RetoursSection({ ventes, articles, boutique, onDone }) {
                       )}
                       {demandeRemiseEchange?.statut === "REFUSEE" && (
                         <div className="flex items-center justify-between gap-2 text-xs px-3 py-2 rounded-lg mb-3" style={{ background: "#FBEAE7", color: "#8C3B2E" }}>
-                          <span className="flex items-center gap-1.5"><XCircle size={13} /> Remise refusée par Djenie</span>
+                          <span className="flex items-center gap-1.5"><XCircle size={13} /> Remise refusée par Anaïs</span>
                           <button onClick={() => setDemandeRemiseEchange(null)} style={{ color: "#8C3B2E" }}><X size={13} /></button>
                         </div>
                       )}
@@ -1323,7 +1323,7 @@ function RetourEchangeReceiptModal({ recu, onClose }) {
             </div>
             {retour.demandeRemise && (
               <p className="text-xs mt-1" style={{ color: "#6B5D52" }}>
-                Remise appliquée ({retour.demandeRemise.numero}) — {retour.demandeRemise.statut === "APPROUVEE" ? "approuvée" : retour.demandeRemise.statut === "REFUSEE" ? "refusée" : "en attente de validation par Djenie"}
+                Remise appliquée ({retour.demandeRemise.numero}) — {retour.demandeRemise.statut === "APPROUVEE" ? "approuvée" : retour.demandeRemise.statut === "REFUSEE" ? "refusée" : "en attente de validation par Anaïs"}
               </p>
             )}
           </div>

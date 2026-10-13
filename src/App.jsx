@@ -37,7 +37,7 @@ function Shell() {
   if (loading) return <div style={{ minHeight: "100vh", background: "#FAF7F2" }} />;
   if (!user) return <LoginScreen />;
   // Interrupteur temporaire (voir constants.js) : le module Livraison est construit et prêt,
-  // mais caché tant que Djenie n'a pas donné le feu vert.
+  // mais caché tant que Anaïs n'a pas donné le feu vert.
   const NAV = [
     { id: "accueil", label: "Accueil", icon: LayoutDashboard },
     { id: "ventes", label: "Ventes", icon: ShoppingCart, perm: "ventes" },
@@ -48,11 +48,11 @@ function Shell() {
     { id: "etats", label: "États", icon: BarChart3, perm: "ventes" },
     { id: "depenses", label: "Dépenses", icon: Wallet, perm: "ventes" },
     { id: "clients", label: "Clients", icon: Heart, perm: "clients" },
-    // Chantier en cours, masqué tant que Djenie n'a pas donné le feu vert (voir constants.js).
+    // Chantier en cours, masqué tant que Anaïs n'a pas donné le feu vert (voir constants.js).
     ...(estAdmin && FIDELITE_ACTIF ? [{ id: "fidelite", label: "Fidélité", icon: Crown }] : []),
     { id: "stock", label: "Stock", icon: Boxes, perm: "stock" },
     { id: "fournisseurs", label: "Fournisseurs", icon: Handshake, perm: "stock" },
-    // Réservé à l'administrateur (Djenie) — pas une question de permission par rôle, comme côté
+    // Réservé à l'administrateur (Anaïs) — pas une question de permission par rôle, comme côté
     // serveur qui vérifie directement role.systeme plutôt qu'une permission dédiée.
     ...(estAdmin ? [{ id: "journal-audit", label: "Journal d'audit", icon: ScrollText }] : []),
     // Écrans de configuration/sécurité — en fin de liste, pas de l'usage quotidien.

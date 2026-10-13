@@ -163,7 +163,7 @@ function UserModal({ user, roles, onCancel, onSubmit }) {
           <input type="checkbox" checked={form.actif} onChange={(e) => set("actif", e.target.checked)} /> Compte actif
         </label>
         <Field label="Code de confirmation (action sensible)">
-          <input type="password" value={form.codeConfirmation || ""} onChange={(e) => set("codeConfirmation", e.target.value)} style={inputStyle} placeholder="Connu uniquement de Djenie et Phil" />
+          <input type="password" value={form.codeConfirmation || ""} onChange={(e) => set("codeConfirmation", e.target.value)} style={inputStyle} placeholder="Connu uniquement d'Anaïs et Phil" />
         </Field>
         <div className="flex justify-end gap-3 mt-6">
           <button onClick={onCancel} className="px-4 py-2 rounded-lg text-sm" style={{ color: "#6B5D52" }}>Annuler</button>

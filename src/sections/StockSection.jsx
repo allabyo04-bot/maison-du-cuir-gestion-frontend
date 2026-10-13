@@ -387,7 +387,7 @@ const ajouterStock = async (articleId, boutique, pointure, quantite) => {
       {confirmVeille && (
         <ConfirmModal
           title="Mettre tout le catalogue en veille ?"
-          message={`Tous les articles actifs (les deux boutiques confondues) deviendront invisibles à la vente. L'historique des ventes déjà réalisées n'est pas touché. Ils redeviendront visibles automatiquement dès que Djenie les réimportera via Excel. ${veilleEnCours ? "Mise en veille en cours..." : ""}`}
+          message={`Tous les articles actifs (les deux boutiques confondues) deviendront invisibles à la vente. L'historique des ventes déjà réalisées n'est pas touché. Ils redeviendront visibles automatiquement dès que Anaïs les réimportera via Excel. ${veilleEnCours ? "Mise en veille en cours..." : ""}`}
           onCancel={() => setConfirmVeille(false)}
           onConfirm={mettreToutEnVeille}
         />

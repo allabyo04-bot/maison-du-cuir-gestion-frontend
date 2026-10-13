@@ -285,7 +285,7 @@ export default function EtatsSection() {
 
       {sousOnglet !== "audit" && !estAdmin && (
         <div className="mb-6 p-4 rounded-2xl text-sm" style={{ background: COULEUR.carte, border: `1px solid ${COULEUR.bordure}`, color: COULEUR.texteDoux }}>
-          Tu consultes les ventes d'aujourd'hui ({new Date().toLocaleDateString("fr-FR")}). Seule Djenie peut consulter les jours précédents.
+          Tu consultes les ventes d'aujourd'hui ({new Date().toLocaleDateString("fr-FR")}). Seule Anaïs peut consulter les jours précédents.
         </div>
       )}
 

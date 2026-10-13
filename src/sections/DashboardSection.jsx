@@ -134,7 +134,7 @@ export default function DashboardSection({ onNaviguerVentes, onNaviguerFidelite 
         }
       }      
 
-    // Alerte stock faible : utile pour un gestionnaire de stock au quotidien, pas pour Djenie
+    // Alerte stock faible : utile pour un gestionnaire de stock au quotidien, pas pour Anaïs
     // qui fonctionne par collections (un stock faible sur un modèle n'est pas anormal chez elle).
     if (peutVoirStock && !estAdmin) {
         const articles = await api.articles.list();

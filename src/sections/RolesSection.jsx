@@ -90,7 +90,7 @@ export default function RolesSection() {
     <div>
       <ErrorBanner error={error} onClose={() => setError("")} />
       <div className="flex items-center justify-between mb-4">
-        <p className="text-sm" style={{ color: "#6B5D52" }}>Le code de confirmation est exigé en plus du PIN pour créer/modifier/supprimer un employé ou un rôle — connu uniquement de Djenie et Phil.</p>
+        <p className="text-sm" style={{ color: "#6B5D52" }}>Le code de confirmation est exigé en plus du PIN pour créer/modifier/supprimer un employé ou un rôle — connu uniquement d'Anaïs et Phil.</p>
         <button onClick={changerCode} className="text-xs px-3 py-1.5 rounded-lg font-medium whitespace-nowrap" style={{ border: "1px solid #DDD3C4", color: "#6B5D52" }}>Changer le code</button>
       </div>
       <div className="overflow-x-auto rounded-xl" style={{ border: "1px solid #EAE1D2" }}>
